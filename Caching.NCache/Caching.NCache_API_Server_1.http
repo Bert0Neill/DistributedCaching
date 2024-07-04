@@ -1,0 +1,6 @@
+@Caching.NCache_HostAddress = http://localhost:5177
+
+GET {{Caching.NCache_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

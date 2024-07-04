@@ -1,0 +1,6 @@
+@Caching.NCache_API_Server_2_HostAddress = http://localhost:5276
+
+GET {{Caching.NCache_API_Server_2_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
