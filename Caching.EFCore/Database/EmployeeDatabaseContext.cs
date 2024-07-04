@@ -24,12 +24,6 @@ public partial class EmployeeDatabaseContext : DbContext
         _configuration = configuration;
     }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    var connectionString = _configuration.GetConnectionString("DefaultConnection");
-    //    optionsBuilder.UseSqlServer(connectionString);
-    //}
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
