@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace Caching.CommonCode.Classes
 {
-    public class RedisDistributedService : IDistributedService
+    public class DistributedService : IDistributedService
     {
         private readonly IDistributedCache _redisDistributedCache;
-        private readonly ILogger<RedisDistributedService> _logger;
+        private readonly ILogger<DistributedService> _logger;
         private readonly EmployeeDatabaseContext _dbContext;
 
-        public RedisDistributedService(IDistributedCache redisDistributedCache, ILogger<RedisDistributedService> logger, EmployeeDatabaseContext dbContext)
+        public DistributedService(IDistributedCache redisDistributedCache, ILogger<DistributedService> logger, EmployeeDatabaseContext dbContext)
         {
             _logger = logger;
             _redisDistributedCache = redisDistributedCache;

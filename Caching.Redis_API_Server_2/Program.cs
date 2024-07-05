@@ -10,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, RedisDistributedService>(); // DI helper class
+builder.Services.AddTransient<IDistributedService, DistributedService>(); // DI helper class
 builder.Services.AddDbContext<EmployeeDatabaseContext>();
 
 // Configure Redis Cache

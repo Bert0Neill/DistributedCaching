@@ -14,23 +14,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, RedisDistributedService>(); // DI helper class
+builder.Services.AddTransient<IDistributedService, DistributedService>();
 builder.Services.AddDbContext<EmployeeDatabaseContext>();
-
-builder.Services.AddDistributedMemoryCache();
 
 // Configure NCache
 builder.Services.AddNCacheDistributedCache(builder.Configuration.GetSection("NCacheSettings"));
-
-////// Configure NCache
-//builder.Services.AddNCacheDistributedCache(configuration =>
-//{
-//    //configuration.CacheName = "myCacheDistributed";
-//    configuration.CacheName = "demoLocalCache";
-//    configuration.EnableLogs = true;
-//    configuration.ExceptionsEnabled = true;
-//});
-
 
 var app = builder.Build();
 
