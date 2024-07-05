@@ -1,0 +1,5 @@
+﻿dotnet sql-cache create "Data Source=(localdb)/MSSQLLocalDB;Initial Catalog=SqlServerCache;Integrated Security=True;" dbo TestCache’
+
+dotnet sql-cache create "Data Source=(localdb)/MSSqlLocalDb;Initial Catalog=EmployeeDatabase;Integrated Security=True;" dbo DistributedCacheTable
+
+dotnet sql-cache create "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EmployeeDatabase;Trusted_Connection=True;MultipleActiveResultSets=true;" dbo DistributedCacheTable
