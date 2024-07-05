@@ -1,6 +1,9 @@
+using Caching.CommonCode.Classes;
+using Caching.CommonCode.Interfaces;
 using Caching.EFCore.Database;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using System;
@@ -17,7 +20,7 @@ builder.Services.AddSwaggerGen();
 //var services = builder.Services;
 
 // Dependency Injection
-//builder.Services.AddTransient<IQueryHelper, QueryHelper>(); // DI helper class
+builder.Services.AddTransient<IDistributedService, RedisDistributedService>(); // DI helper class
 builder.Services.AddDbContext<EmployeeDatabaseContext>();
 
 // Configure Redis
@@ -41,15 +44,7 @@ app.UseHttpsRedirection();
  *            Start Minimal API's                           *
  ***********************************************************/
 
-//app.MapGet("/CacheServerHealth", async (IConnectionMultiplexer redis) =>
-//{
-//    var result = await redis.GetDatabase().PingAsync();
-//    return result.CompareTo(TimeSpan.Zero) > 0 ? $"PONG: {result}" : null;
-//})
-//.WithName("CacheServerHealth")
-//.WithOpenApi();
-
-// default health check - ping
+// API health check - ping
 app.MapGet("/", () => "Healthy - Caching.Redis_API_Server_1");
 
 // inject EmployeeDatabaseContext & ILogger
@@ -61,24 +56,12 @@ app.MapGet("/Top10Employee", async (ILogger<Program> logger, EmployeeDatabaseCon
     return Results.Ok(entities);
 });
 
-app.MapGet("/GetEmployeeByName/{employeeName}", async (ILogger<Program> logger, EmployeeDatabaseContext dbContext, string employeeName) =>
+app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService redisDistributedCache, ILogger < Program> logger, string employeeName) =>
 {
     var message = $"Retrieving data for employee {employeeName}";
     logger.LogInformation(message);
 
-    // query DB
-    var employee = await dbContext.Employees
-        .AsNoTracking()
-        .Where(e => e.EmployeeName == employeeName)
-        .FirstOrDefaultAsync();
-
-    if (employee == null)
-    {
-        message = $"Employee with name {employeeName} not found.";
-        logger.LogInformation(message);
-        return Results.NotFound(message);
-    }
-
+    var employee = await redisDistributedCache.RetrieveEmployeeByNameAsync(employeeName);
     return Results.Ok(employee);
 })
 .WithName("GetEmployeeByName")
