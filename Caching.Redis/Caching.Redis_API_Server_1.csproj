@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Caching.CommonCode\Caching.CommonCode.csproj" />
-    <ProjectReference Include="..\Caching.EFCore\Caching.EFCore.csproj" />
   </ItemGroup>
 
 </Project>

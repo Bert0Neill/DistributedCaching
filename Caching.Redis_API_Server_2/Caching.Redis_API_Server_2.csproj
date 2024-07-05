@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Caching.EFCore\Caching.EFCore.csproj" />
+    <ProjectReference Include="..\Caching.CommonCode\Caching.CommonCode.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,29 +1,19 @@
 using Caching.CommonCode.Classes;
 using Caching.CommonCode.Interfaces;
 using Caching.EFCore.Database;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Configuration;
-using StackExchange.Redis;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-//// create references to builder sub-classes
-//var config = builder.Configuration;
-//var services = builder.Services;
 
 // Dependency Injection
 builder.Services.AddTransient<IDistributedService, RedisDistributedService>(); // DI helper class
 builder.Services.AddDbContext<EmployeeDatabaseContext>();
 
-// Configure Redis
+// Configure Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {    
     options.Configuration = $"{builder.Configuration.GetValue<string>("RedisConnection:Host")}:{builder.Configuration.GetValue<string>("RedisConnection:Port")}";

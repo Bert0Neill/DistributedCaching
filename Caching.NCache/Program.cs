@@ -1,9 +1,36 @@
+using Microsoft.Extensions.Caching.Distributed;
+using Alachisoft.NCache.Caching.Distributed;
+using Alachisoft.NCache.Client;
+using Caching.CommonCode.Classes;
+using Caching.CommonCode.Interfaces;
+using Caching.EFCore.Database;
+using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Dependency Injection
+builder.Services.AddTransient<IDistributedService, RedisDistributedService>(); // DI helper class
+builder.Services.AddDbContext<EmployeeDatabaseContext>();
+
+builder.Services.AddDistributedMemoryCache();
+
+// Configure NCache
+builder.Services.AddNCacheDistributedCache(builder.Configuration.GetSection("NCacheSettings"));
+
+////// Configure NCache
+//builder.Services.AddNCacheDistributedCache(configuration =>
+//{
+//    //configuration.CacheName = "myCacheDistributed";
+//    configuration.CacheName = "demoLocalCache";
+//    configuration.EnableLogs = true;
+//    configuration.ExceptionsEnabled = true;
+//});
+
 
 var app = builder.Build();
 
@@ -16,29 +43,37 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+/************************************************************
+ *            Start Minimal API's                           *
+ ***********************************************************/
 
-app.MapGet("/weatherforecast", () =>
+// API health check - ping
+app.MapGet("/", () => "Healthy - Caching.NCache_API_Server_1");
+
+// inject EmployeeDatabaseContext & ILogger
+app.MapGet("/Top10Employee", async (ILogger < Program> logger, EmployeeDatabaseContext dbContext) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    
+    logger.LogInformation("Top10Employee called");
+
+    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
+    return Results.Ok(entities);
+});
+
+app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService redisDistributedCache, ILogger<Program> logger, string employeeName) =>
+{
+    var message = $"Retrieving data for employee {employeeName}";
+    logger.LogInformation(message);
+
+    var employee = await redisDistributedCache.RetrieveEmployeeByNameAsync(employeeName);
+    return Results.Ok(employee);
 })
-.WithName("GetWeatherForecast")
+.WithName("GetEmployeeByName")
 .WithOpenApi();
 
-app.Run();
+/************************************************************
+ *              End Minimal API's                           *
+ ***********************************************************/
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.Logger.LogInformation("Starting Caching.NCache_API_Server_1 app ...");
+app.Run();
