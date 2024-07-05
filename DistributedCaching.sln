@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1) Redis", "1) Redis", "{08
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3) SqlCache", "3) SqlCache", "{DF79B673-BE3D-46B9-B941-449B364276D2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4) ResponseCache", "4) ResponseCache", "{5C8C9C7F-0718-48EA-9722-1AF7A1B68537}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4) ResponseOutputCache", "4) ResponseOutputCache", "{5C8C9C7F-0718-48EA-9722-1AF7A1B68537}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6) Database", "6) Database", "{8D6A9E88-2B60-4204-AC48-145B1BFB5491}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.SqlServer_API_1", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.SqlServer_API_2", "Caching.SqlServer_API_2\Caching.SqlServer_API_2.csproj", "{E52362CD-3C00-4C45-A7B8-49A29E769094}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.ResponseAPI_1", "Caching.ResponseAPI_1\Caching.ResponseAPI_1.csproj", "{C2B2B661-A55B-4161-819A-3B7DBF6AF8DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.ResponseOutputAPI_1", "Caching.ResponseAPI_1\Caching.ResponseOutputAPI_1.csproj", "{C2B2B661-A55B-4161-819A-3B7DBF6AF8DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.ResponseAPI_2", "Caching.ResponseAPI_2\Caching.ResponseAPI_2.csproj", "{55C941A8-625C-457C-83B1-F27760988657}"
 EndProject

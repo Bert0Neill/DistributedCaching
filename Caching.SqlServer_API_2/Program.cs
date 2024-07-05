@@ -17,8 +17,8 @@ builder.Services.AddDbContext<EmployeeDatabaseContext>();
 builder.Services.AddDistributedSqlServerCache(options =>
 {
     options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.SchemaName = builder.Configuration.GetValue<string>("DistributedCachedSchema");
-    options.TableName = builder.Configuration.GetValue<string>("DistributedCachedTableName");
+    options.SchemaName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:Schema");
+    options.TableName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:TableName");
 });
 
 var app = builder.Build();
