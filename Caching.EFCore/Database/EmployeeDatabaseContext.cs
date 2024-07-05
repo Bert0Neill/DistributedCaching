@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Caching.EFCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Caching.EFCore.Database;
@@ -12,7 +14,7 @@ namespace Caching.EFCore.Database;
 public partial class EmployeeDatabaseContext : DbContext
 {
     private readonly IConfiguration _configuration;
-
+   
     public EmployeeDatabaseContext(DbContextOptions<EmployeeDatabaseContext> options, IConfiguration configuration)
         : base(options)
     {
@@ -29,7 +31,10 @@ public partial class EmployeeDatabaseContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseSqlServer(connectionString).EnableSensitiveDataLogging();
+#if DEBUG
+            optionsBuilder.LogTo(Console.WriteLine);
+#endif
         }
     }
 

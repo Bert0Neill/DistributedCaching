@@ -41,8 +41,6 @@ app.UseHttpsRedirection();
  *            Start Minimal API's                           *
  ***********************************************************/
 
-
-
 //app.MapGet("/CacheServerHealth", async (IConnectionMultiplexer redis) =>
 //{
 //    var result = await redis.GetDatabase().PingAsync();
@@ -51,39 +49,44 @@ app.UseHttpsRedirection();
 //.WithName("CacheServerHealth")
 //.WithOpenApi();
 
-app.MapGet("/Top10Employee", async (EmployeeDatabaseContext dbContext) =>
+// default health check - ping
+app.MapGet("/", () => "Healthy - Caching.Redis_API_Server_1");
+
+// inject EmployeeDatabaseContext & ILogger
+app.MapGet("/Top10Employee", async (ILogger<Program> logger, EmployeeDatabaseContext dbContext) =>
 {
+    logger.LogInformation("Top10Employee called");
+
     var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
     return Results.Ok(entities);
 });
 
-var summaries = new[]
+app.MapGet("/GetEmployeeByName/{employeeName}", async (ILogger<Program> logger, EmployeeDatabaseContext dbContext, string employeeName) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var message = $"Retrieving data for employee {employeeName}";
+    logger.LogInformation(message);
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    // query DB
+    var employee = await dbContext.Employees
+        .AsNoTracking()
+        .Where(e => e.EmployeeName == employeeName)
+        .FirstOrDefaultAsync();
+
+    if (employee == null)
+    {
+        message = $"Employee with name {employeeName} not found.";
+        logger.LogInformation(message);
+        return Results.NotFound(message);
+    }
+
+    return Results.Ok(employee);
 })
-.WithName("GetWeatherForecast")
+.WithName("GetEmployeeByName")
 .WithOpenApi();
 
 /************************************************************
  *              End Minimal API's                           *
  ***********************************************************/
 
+app.Logger.LogInformation("Starting Caching.Redis_API_Server_1 app ...");
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
