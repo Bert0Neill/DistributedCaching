@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.CommonCode", "Caching.CommonCode\Caching.CommonCode.csproj", "{4584F071-CA8C-455F-B3A5-C27B62CB1AE9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5) CommonCode", "5) CommonCode", "{51D2176A-C792-4D93-A8A9-4BFA30464219}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6) CommonCode", "6) CommonCode", "{51D2176A-C792-4D93-A8A9-4BFA30464219}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2) NCache", "2) NCache", "{498E0A9C-71B6-44DA-BD3F-DD9F3AF68E79}"
 EndProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3) SqlCache", "3) SqlCache"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4) ResponseOutputCache", "4) ResponseOutputCache", "{5C8C9C7F-0718-48EA-9722-1AF7A1B68537}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6) Database", "6) Database", "{8D6A9E88-2B60-4204-AC48-145B1BFB5491}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7) Database", "7) Database", "{8D6A9E88-2B60-4204-AC48-145B1BFB5491}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.EFCore", "Caching.EFCore\Caching.EFCore.csproj", "{F760BEAB-B61E-47C2-99FB-1EAA476B7C94}"
 EndProject
@@ -39,11 +39,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.CosmosDB_Server_1",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.CosmosDB_Server_2", "Caching.CosmosDB_Server_2\Caching.CosmosDB_Server_2.csproj", "{D2F15B5A-89CC-49DF-B338-9B7208ECC32E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySQL", "MySQL", "{7E7FA230-885D-4105-A790-3A7E8955A66C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5) MySQL", "5) MySQL", "{7E7FA230-885D-4105-A790-3A7E8955A66C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caching.MySql_API_Server_1", "Caching.MySql_API_Server_1\Caching.MySql_API_Server_1.csproj", "{6B731272-51FA-4503-9AF0-2C7535C31999}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.MySql_API_Server_1", "Caching.MySql_API_Server_1\Caching.MySql_API_Server_1.csproj", "{6B731272-51FA-4503-9AF0-2C7535C31999}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caching.MySql_API_Server_2", "Caching.MySql_API_Server_2\Caching.MySql_API_Server_2.csproj", "{AF63A2FE-1694-49F8-8232-C4AF87CDA124}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.MySql_API_Server_2", "Caching.MySql_API_Server_2\Caching.MySql_API_Server_2.csproj", "{AF63A2FE-1694-49F8-8232-C4AF87CDA124}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
