@@ -38,22 +38,22 @@ app.UseHttpsRedirection();
 // API health check - ping
 app.MapGet("/", () => "Healthy - Caching.NCache_API_Server_1");
 
-// inject EmployeeDatabaseContext & ILogger
-app.MapGet("/Top10Employee", async (ILogger < Program> logger, EmployeeDatabaseContext dbContext) =>
-{
+//// inject EmployeeDatabaseContext & ILogger
+//app.MapGet("/Top10Employee", async (ILogger < Program> logger, EmployeeDatabaseContext dbContext) =>
+//{
     
-    logger.LogInformation("Top10Employee called");
+//    logger.LogInformation("Top10Employee called");
 
-    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
-    return Results.Ok(entities);
-});
+//    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
+//    return Results.Ok(entities);
+//});
 
-app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService redisDistributedCache, ILogger<Program> logger, string employeeName) =>
+app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService agnosticDistributedCacheService, ILogger<Program> logger, string employeeName) =>
 {
     var message = $"Retrieving data for employee {employeeName}";
     logger.LogInformation(message);
 
-    var employee = await redisDistributedCache.RetrieveEmployeeByNameAsync(employeeName);
+    var employee = await agnosticDistributedCacheService.RetrieveEmployeeByNameAsync(employeeName);
     return Results.Ok(employee);
 })
 .WithName("GetEmployeeByName")

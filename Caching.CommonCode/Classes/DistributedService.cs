@@ -16,14 +16,14 @@ namespace Caching.CommonCode.Classes
 {
     public class DistributedService : IDistributedService
     {
-        private readonly IDistributedCache _redisDistributedCache;
+        private readonly IDistributedCache _agnosticDistributedCache;
         private readonly ILogger<DistributedService> _logger;
         private readonly EmployeeDatabaseContext _dbContext;
 
-        public DistributedService(IDistributedCache redisDistributedCache, ILogger<DistributedService> logger, EmployeeDatabaseContext dbContext)
+        public DistributedService(IDistributedCache agnosticDistributedCache, ILogger<DistributedService> logger, EmployeeDatabaseContext dbContext)
         {
             _logger = logger;
-            _redisDistributedCache = redisDistributedCache;
+            _agnosticDistributedCache = agnosticDistributedCache;
             _dbContext = dbContext;
         }
 
@@ -41,7 +41,7 @@ namespace Caching.CommonCode.Classes
             };
 
             // check Redis cache first (cache hit)
-            string? cachedJsonEmployee = await _redisDistributedCache.GetStringAsync(key, cancellationToken);
+            string? cachedJsonEmployee = await _agnosticDistributedCache.GetStringAsync(key, cancellationToken);
 
             // check if employee doesn't exist in cacahe - then go to DB (cache miss)
             if (string.IsNullOrEmpty(cachedJsonEmployee))
@@ -55,7 +55,7 @@ namespace Caching.CommonCode.Classes
                 if (employee is null) return employee; // not found in DB either
 
                 // found in DB and cache for futrure calls
-                await _redisDistributedCache.SetStringAsync(
+                await _agnosticDistributedCache.SetStringAsync(
                     key,
                     JsonConvert.SerializeObject(employee),
                     cacheOptions, // include eviction option

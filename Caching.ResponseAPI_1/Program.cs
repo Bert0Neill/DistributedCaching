@@ -46,22 +46,22 @@ app.UseHttpsRedirection();
 // API health check - ping
 app.MapGet("/", () => "Healthy - Caching.ResponseAPI_1");
 
-// cache response for 60 seconds
-app.MapGet("/Top10Employee", [OutputCache] async (ILogger<Program> logger, EmployeeDatabaseContext dbContext) =>
-{
-    logger.LogInformation("Top10Employee called");
+//// cache response for 60 seconds
+//app.MapGet("/Top10Employee", [OutputCache] async (ILogger<Program> logger, EmployeeDatabaseContext dbContext) =>
+//{
+//    logger.LogInformation("Top10Employee called");
 
-    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
-    return Results.Ok(entities);
-});
+//    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
+//    return Results.Ok(entities);
+//});
 
 // cache response for 60 seconds
-app.MapGet("/GetEmployeeByName/{employeeName}", [OutputCache] async (IDistributedService redisDistributedCache, ILogger<Program> logger, string employeeName) =>
+app.MapGet("/GetEmployeeByName/{employeeName}", [OutputCache] async (IDistributedService agnosticDistributedCacheService, ILogger<Program> logger, string employeeName) =>
 {
     var message = $"Retrieving data for employee {employeeName}";
     logger.LogInformation(message);
 
-    var employee = await redisDistributedCache.RetrieveEmployeeByNameAsync(employeeName);
+    var employee = await agnosticDistributedCacheService.RetrieveEmployeeByNameAsync(employeeName);
     return Results.Ok(employee);
 })
 .WithName("GetEmployeeByName")
