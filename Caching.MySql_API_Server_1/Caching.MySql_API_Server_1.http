@@ -1,0 +1,6 @@
+@Caching.MySql_API_Server_1_HostAddress = http://localhost:5115
+
+GET {{Caching.MySql_API_Server_1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -14,8 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, DistributedService>();
-builder.Services.AddDbContext<EmployeeDatabaseContext>();
+builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>();
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();
 
 // Configure NCache
 builder.Services.AddNCacheDistributedCache(builder.Configuration.GetSection("NCacheSettings"));
@@ -37,16 +37,6 @@ app.UseHttpsRedirection();
 
 // API health check - ping
 app.MapGet("/", () => "Healthy - Caching.NCache_API_Server_1");
-
-//// inject EmployeeDatabaseContext & ILogger
-//app.MapGet("/Top10Employee", async (ILogger < Program> logger, EmployeeDatabaseContext dbContext) =>
-//{
-    
-//    logger.LogInformation("Top10Employee called");
-
-//    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
-//    return Results.Ok(entities);
-//});
 
 app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService agnosticDistributedCacheService, ILogger<Program> logger, string employeeName) =>
 {

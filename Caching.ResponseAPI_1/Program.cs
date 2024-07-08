@@ -15,8 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddOutputCache();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, DistributedService>();
-builder.Services.AddDbContext<EmployeeDatabaseContext>();
+builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>();
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();
 
 builder.Services.AddDistributedSqlServerCache(options =>
 {

@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace Caching.CommonCode.Classes
 {
-    public class DistributedService : IDistributedService
+    public class SqlServerDistributedService : IDistributedService
     {
         private readonly IDistributedCache _agnosticDistributedCache;
-        private readonly ILogger<DistributedService> _logger;
-        private readonly EmployeeDatabaseContext _dbContext;
+        private readonly ILogger<SqlServerDistributedService> _logger;
+        private readonly SqlServerEmployeeDatabaseContext _dbContext;
 
-        public DistributedService(IDistributedCache agnosticDistributedCache, ILogger<DistributedService> logger, EmployeeDatabaseContext dbContext)
+        public SqlServerDistributedService(IDistributedCache agnosticDistributedCache, ILogger<SqlServerDistributedService> logger, SqlServerEmployeeDatabaseContext dbContext)
         {
             _logger = logger;
             _agnosticDistributedCache = agnosticDistributedCache;

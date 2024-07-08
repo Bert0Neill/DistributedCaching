@@ -10,8 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, DistributedService>(); // DI helper class
-builder.Services.AddDbContext<EmployeeDatabaseContext>();
+builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>(); // DI helper class
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();
 
 // Configure Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -36,15 +36,6 @@ app.UseHttpsRedirection();
 
 // API health check - ping
 app.MapGet("/", () => "Healthy - Caching.Redis_API_Server_1");
-
-//// inject EmployeeDatabaseContext & ILogger
-//app.MapGet("/Top10Employee", async (ILogger<Program> logger, EmployeeDatabaseContext dbContext) =>
-//{
-//    logger.LogInformation("Top10Employee called");
-
-//    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
-//    return Results.Ok(entities);
-//});
 
 app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService agnosticDistributedCacheService, ILogger < Program> logger, string employeeName) =>
 {

@@ -8,20 +8,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging;
 using static System.Net.Mime.MediaTypeNames;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Caching.EFCore.Database;
 
-public partial class EmployeeDatabaseContext : DbContext
+public partial class MySqlServerEmployeeDatabaseContext : DbContext
 {
     private readonly IConfiguration _configuration;
    
-    public EmployeeDatabaseContext(DbContextOptions<EmployeeDatabaseContext> options, IConfiguration configuration)
+    public MySqlServerEmployeeDatabaseContext(DbContextOptions<MySqlServerEmployeeDatabaseContext> options, IConfiguration configuration)
         : base(options)
     {
         _configuration = configuration;
     }
 
-    public EmployeeDatabaseContext(IConfiguration configuration)
+    public MySqlServerEmployeeDatabaseContext(IConfiguration configuration)
     {
         _configuration = configuration;
     }
@@ -31,7 +32,11 @@ public partial class EmployeeDatabaseContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString).EnableSensitiveDataLogging();
+            //var connectionString = "Server=127.0.0.1;Database=employeedatabase;User=bertoneill;Password=P@ssw0rd;port=3306;";
+
+            optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))) // replace with your MySql version
+                .EnableSensitiveDataLogging();
+
 #if DEBUG
             optionsBuilder.LogTo(Console.WriteLine);
 #endif
