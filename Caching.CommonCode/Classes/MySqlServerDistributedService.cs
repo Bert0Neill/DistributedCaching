@@ -5,12 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Caching.CommonCode.Classes
 {
@@ -52,7 +46,7 @@ namespace Caching.CommonCode.Classes
                 employee = await _dbContext.Employees
                                   .AsNoTracking()
                                   .Where(e => e.EmployeeName == employeeName)
-                                   .FirstOrDefaultAsync(cancellationToken);
+                                  .FirstOrDefaultAsync(cancellationToken);
 
                 if (employee is null) return employee; // not found in DB either
 
