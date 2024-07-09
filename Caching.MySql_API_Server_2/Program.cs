@@ -20,11 +20,6 @@ builder.Services.AddDbContext<MySqlServerEmployeeDatabaseContext>(); // inject M
 
 builder.Services.AddDistributedMySqlCache(options =>
 {
-    ////options.ConnectionString = "server=127.0.0.1;uid=username;pwd=password;database=employeedatabase;port=3306;pooling=false;SslMode=None;old Guids=true;Charset=utf8;AllowUserVariables=true;";
-    //options.ConnectionString = "Server=127.0.0.1;Database=employeedatabase;User=bertoneill;Password=P@ssw0rd;port=3306;AllowUserVariables=true;";
-    //options.SchemaName = "employeedatabase";
-    //options.TableName = "mysqlcache"; // new Cache table
-
     options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.SchemaName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:Schema");
     options.TableName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:TableName");
@@ -48,7 +43,7 @@ app.UseHttpsRedirection();
 // API health check - ping
 app.MapGet("/", () => "Healthy - Caching.MySql_API_Server_2");
 
-app.MapGet("/GetEmployeeByName/{employeeName}", async (MySqlServerEmployeeDatabaseContext _MySqlServerEmployeeDatabaseContext, IDistributedCache distributedCache, IDistributedService agnosticDistributedCacheService, ILogger<Program> logger, string employeeName) =>
+app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService agnosticDistributedCacheService, ILogger<Program> logger, string employeeName) =>
 {
     var message = $"Retrieving data for employee {employeeName}";
     logger.LogInformation(message);

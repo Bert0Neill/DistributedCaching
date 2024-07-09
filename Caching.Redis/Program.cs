@@ -1,7 +1,12 @@
+using Ardalis.GuardClauses;
 using Caching.CommonCode.Classes;
 using Caching.CommonCode.Interfaces;
 using Caching.EFCore.Database;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +35,32 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+/*************************************************************************
+* Associate a Global Error handler middleware for your end-points *
+**************************************************************************/
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (contextFeature != null)
+        {
+            // consistant output
+            var problemDetails = new ProblemDetails
+            {
+                Status = context.Response.StatusCode,
+                Title = "An unexpected error occurred!",
+                Detail = contextFeature.Error.Message
+            };
+
+            await context.Response.WriteAsJsonAsync(problemDetails);
+        }
+    });
+});
+
 /************************************************************
  *            Start Minimal API's                           *
  ***********************************************************/
@@ -39,6 +70,9 @@ app.MapGet("/", () => "Healthy - Caching.Redis_API_Server_1");
 
 app.MapGet("/GetEmployeeByName/{employeeName}", async (IDistributedService agnosticDistributedCacheService, ILogger < Program> logger, string employeeName) =>
 {
+    //guard clause
+    employeeName = Guard.Against.NullOrEmpty(employeeName.Trim(), nameof(employeeName));
+
     var message = $"Retrieving data for employee {employeeName}";
     logger.LogInformation(message);
 
