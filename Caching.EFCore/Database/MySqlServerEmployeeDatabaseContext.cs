@@ -32,7 +32,6 @@ public partial class MySqlServerEmployeeDatabaseContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            //var connectionString = "Server=127.0.0.1;Database=employeedatabase;User=bertoneill;Password=P@ssw0rd;port=3306;";
 
             optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))) // replace with your MySql version
                 .EnableSensitiveDataLogging();
