@@ -18,13 +18,10 @@ namespace Caching.CommonCode.Classes
     {
         private readonly IDistributedCache _agnosticDistributedCache;
         private readonly ILogger<MongoDBDistributedService> _logger;
-        private readonly SqlServerEmployeeDatabaseContext _dbContext;
-        //private readonly MongoDBEmployeeDatabaseContext _dbContext;
+        private readonly SqlServerEmployeeDatabaseContext _dbContext; // source of data (SQl Server)
         private readonly DistributedCacheEntryOptions _cacheOptions;
 
-
         public MongoDBDistributedService(IDistributedCache agnosticDistributedCache, ILogger<MongoDBDistributedService> logger, SqlServerEmployeeDatabaseContext dbContext)
-        //public MongoDBDistributedService(IDistributedCache agnosticDistributedCache, ILogger<MongoDBDistributedService> logger, MongoDBEmployeeDatabaseContext dbContext)
         {
             _logger = logger;
             _agnosticDistributedCache = agnosticDistributedCache;
@@ -33,9 +30,9 @@ namespace Caching.CommonCode.Classes
             // create a new DistributedCacheEntryOptions instance
             _cacheOptions = new DistributedCacheEntryOptions
             {
-                AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(1), // Set absolute expiration to a specific date and time
+                AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(2), // Set absolute expiration to a specific date and time
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5), // Set relative expiration to 5 minutes from now
-                SlidingExpiration = TimeSpan.FromMinutes(1) // Set sliding expiration to 2 minutes
+                SlidingExpiration = TimeSpan.FromMinutes(2) // Set sliding expiration to 2 minutes
             };
         }
 

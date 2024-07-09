@@ -17,24 +17,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-//builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>(); // inject MongoDB service
 builder.Services.AddTransient<IDistributedService, MongoDBDistributedService>(); // inject MongoDB service
-builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>(); // inject SQL Server dbContext
-//builder.Services.AddDbContext<MongoDBEmployeeDatabaseContext>(); // inject SQL Server dbContext
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>(); // inject SQL Server dbContext (data source)
 
 // determine what MongoDB database & collection to use for caching (these will already be created in MongoDB)
 builder.Services.AddMongoDbCache(options =>
 {
-    options.ConnectionString = "mongodb://localhost:27017";
-    options.DatabaseName = "MongoCache";
-    options.CollectionName = "AppCache";
+    //options.ConnectionString = "mongodb://localhost:27017";
+    //options.DatabaseName = "MongoCache";
+    //options.CollectionName = "AppCache";
+
+    options.ConnectionString = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:ConnectionString");
+    options.DatabaseName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:Schema");
+    options.CollectionName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:TableName");
+
     options.ExpiredScanInterval = TimeSpan.FromMinutes(10);
 });
-
-
-
-
-
 
 var app = builder.Build();
 
