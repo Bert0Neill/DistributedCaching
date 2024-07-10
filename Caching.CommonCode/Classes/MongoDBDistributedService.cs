@@ -15,7 +15,8 @@ namespace Caching.CommonCode.Classes
         private readonly SqlServerEmployeeDatabaseContext _dbContext; // source of data (SQl Server)
         private readonly DistributedCacheEntryOptions _cacheOptions;
 
-        public MongoDBDistributedService(IDistributedCache agnosticDistributedCache, ILogger<MongoDBDistributedService> logger, SqlServerEmployeeDatabaseContext dbContext)
+        public MongoDBDistributedService(IDistributedCache agnosticDistributedCache, ILogger<MongoDBDistributedService> logger, 
+            SqlServerEmployeeDatabaseContext dbContext)
         {
             _logger = logger;
             _agnosticDistributedCache = agnosticDistributedCache;

@@ -25,6 +25,15 @@ builder.Services.AddDistributedSqlServerCache(options =>
     options.TableName = builder.Configuration.GetValue<string>("SqlDistributedCacheTable:TableName");
 });
 
+// create response output caching (duration) policies - default is 20 deconds
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.Expire(TimeSpan.FromSeconds(10)));
+    options.AddPolicy("Expire30", builder => builder.Expire(TimeSpan.FromSeconds(30)));
+    options.AddPolicy("Expire60", builder => builder.Expire(TimeSpan.FromSeconds(60)));
+});
+
+
 var app = builder.Build();
 
 // Use aoutput caching
@@ -46,17 +55,10 @@ app.UseHttpsRedirection();
 // API health check - ping
 app.MapGet("/", () => "Healthy - Caching.ResponseAPI_1");
 
-//// cache response for 60 seconds
-//app.MapGet("/Top10Employee", [OutputCache] async (ILogger<Program> logger, EmployeeDatabaseContext dbContext) =>
-//{
-//    logger.LogInformation("Top10Employee called");
-
-//    var entities = await dbContext.Employees.Take(10).AsNoTracking().ToListAsync();
-//    return Results.Ok(entities);
-//});
-
-// cache response for 60 seconds
-app.MapGet("/GetEmployeeByName/{employeeName}", [OutputCache] async (IDistributedService agnosticDistributedCacheService, ILogger<Program> logger, string employeeName) =>
+// cache response for 30 seconds
+app.MapGet("/GetEmployeeByName/{employeeName}", [OutputCache(PolicyName = "Expire30")] 
+    async (IDistributedService agnosticDistributedCacheService, 
+    ILogger<Program> logger, string employeeName) =>
 {
     var message = $"Retrieving data for employee {employeeName}";
     logger.LogInformation(message);

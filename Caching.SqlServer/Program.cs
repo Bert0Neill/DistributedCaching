@@ -6,13 +6,12 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>();
-builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();
+builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>(); // DI service class
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();  // DI database context
 
 builder.Services.AddDistributedSqlServerCache(options =>
 {    

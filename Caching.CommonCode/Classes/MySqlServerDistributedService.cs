@@ -15,7 +15,8 @@ namespace Caching.CommonCode.Classes
         private readonly MySqlServerEmployeeDatabaseContext _dbContext;
         private readonly DistributedCacheEntryOptions _cacheOptions;
 
-        public MySqlServerDistributedService(IDistributedCache agnosticDistributedCache, ILogger<MySqlServerDistributedService> logger, MySqlServerEmployeeDatabaseContext dbContext)
+        public MySqlServerDistributedService(IDistributedCache agnosticDistributedCache, ILogger<MySqlServerDistributedService> logger, 
+            MySqlServerEmployeeDatabaseContext dbContext)
         {
             _logger = logger;
             _agnosticDistributedCache = agnosticDistributedCache;

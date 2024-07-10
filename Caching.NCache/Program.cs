@@ -1,11 +1,7 @@
-using Microsoft.Extensions.Caching.Distributed;
 using Alachisoft.NCache.Caching.Distributed;
-using Alachisoft.NCache.Client;
 using Caching.CommonCode.Classes;
 using Caching.CommonCode.Interfaces;
 using Caching.EFCore.Database;
-using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>();
-builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();
+builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>(); // DI service class
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>(); // DI database context
 
 // Configure NCache
 builder.Services.AddNCacheDistributedCache(builder.Configuration.GetSection("NCacheSettings"));

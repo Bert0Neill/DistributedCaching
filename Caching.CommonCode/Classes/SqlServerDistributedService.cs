@@ -14,7 +14,8 @@ namespace Caching.CommonCode.Classes
         private readonly ILogger<SqlServerDistributedService> _logger;
         private readonly SqlServerEmployeeDatabaseContext _dbContext;
 
-        public SqlServerDistributedService(IDistributedCache agnosticDistributedCache, ILogger<SqlServerDistributedService> logger, SqlServerEmployeeDatabaseContext dbContext)
+        public SqlServerDistributedService(IDistributedCache agnosticDistributedCache, 
+            ILogger<SqlServerDistributedService> logger, SqlServerEmployeeDatabaseContext dbContext)
         {
             _logger = logger;
             _agnosticDistributedCache = agnosticDistributedCache;

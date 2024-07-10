@@ -15,8 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection
-builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>(); // DI helper class
-builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>();
+builder.Services.AddTransient<IDistributedService, SqlServerDistributedService>(); // DI service class
+builder.Services.AddDbContext<SqlServerEmployeeDatabaseContext>(); // DI database context
 
 // Configure Redis Cache
 builder.Services.AddStackExchangeRedisCache(options =>
