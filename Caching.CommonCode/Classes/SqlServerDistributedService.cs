@@ -8,61 +8,22 @@ using Newtonsoft.Json;
 
 namespace Caching.CommonCode.Classes
 {
-    public class SqlServerDistributedService : IDistributedService
+
+    public class SqlServerDistributedService : DistributedServiceBase<SqlServerEmployeeDatabaseContext>
     {
-        private readonly IDistributedCache _agnosticDistributedCache;
         private readonly ILogger<SqlServerDistributedService> _logger;
         private readonly SqlServerEmployeeDatabaseContext _dbContext;
 
-        public SqlServerDistributedService(IDistributedCache agnosticDistributedCache, 
-            ILogger<SqlServerDistributedService> logger, SqlServerEmployeeDatabaseContext dbContext)
+        public SqlServerDistributedService(IDistributedCache agnosticDistributedCache,
+                                           ILogger<SqlServerDistributedService> logger,
+                                           SqlServerEmployeeDatabaseContext dbContext)
+            : base(agnosticDistributedCache)
         {
             _logger = logger;
-            _agnosticDistributedCache = agnosticDistributedCache;
             _dbContext = dbContext;
         }
 
-        public async Task<Employee?> RetrieveEmployeeByNameAsync(string employeeName, CancellationToken cancellationToken = default)        
-        {
-            Employee? employee;
-            string key = $"employee-{employeeName}";
-            _logger.LogInformation(key);
-
-            // create cache options
-            var cacheOptions = new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3),// expire after a fixed time period (e.g., 3 minutes).
-                SlidingExpiration = TimeSpan.FromMinutes(1) // expire if it hasn't been accessed for a specified time period (e.g., 1 minute).
-            };
-
-            // check Redis cache first (cache hit)
-            string? cachedJsonEmployee = await _agnosticDistributedCache.GetStringAsync(key, cancellationToken);
-
-            // check if employee doesn't exist in cacahe - then go to DB (cache miss)
-            if (string.IsNullOrEmpty(cachedJsonEmployee))
-            {
-                // query DB
-                employee = await _dbContext.Employees
-                                  .AsNoTracking()
-                                  .Where(e => e.EmployeeName == employeeName)
-                                   .FirstOrDefaultAsync(cancellationToken);
-
-                if (employee is null) return employee; // not found in DB either
-
-                // found in DB and cache for futrure calls
-                await _agnosticDistributedCache.SetStringAsync(
-                    key,
-                    JsonConvert.SerializeObject(employee),
-                    cacheOptions, // include eviction option
-                    cancellationToken);
-
-                return employee;
-            }
-            else // found in cache
-            {
-                employee = JsonConvert.DeserializeObject<Employee>(cachedJsonEmployee);
-                return employee;
-            }
-        }
+        protected override ILogger Logger => _logger;
+        protected override SqlServerEmployeeDatabaseContext DbContext => _dbContext;
     }
 }
