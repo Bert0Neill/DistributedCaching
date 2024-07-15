@@ -22,7 +22,7 @@ namespace Caching.CommonCode.Classes
             _dbContext = dbContext;
         }
 
-        protected override ILogger Logger => _logger;
-        protected override SqlServerEmployeeDatabaseContext DbContext => _dbContext;
+        protected override ILogger BaseLogger => _logger;
+        protected override SqlServerEmployeeDatabaseContext BaseDbContext => _dbContext;
     }
 }

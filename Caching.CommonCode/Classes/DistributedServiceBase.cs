@@ -16,14 +16,14 @@ namespace Caching.CommonCode.Classes
             _agnosticDistributedCache = agnosticDistributedCache;
         }
 
-        protected abstract ILogger Logger { get; }
-        protected abstract TContext DbContext { get; }
+        protected abstract ILogger BaseLogger { get; }
+        protected abstract TContext BaseDbContext { get; }
 
         public async Task<Employee?> RetrieveEmployeeByNameAsync(string employeeName, CancellationToken cancellationToken = default)
         {
             Employee? employee;
             string key = $"employee-{employeeName}";
-            Logger.LogInformation(key);
+            BaseLogger.LogInformation(key);
 
             var cacheOptions = new DistributedCacheEntryOptions
             {
@@ -35,7 +35,7 @@ namespace Caching.CommonCode.Classes
 
             if (string.IsNullOrEmpty(cachedJsonEmployee))
             {
-                employee = await DbContext.Set<Employee>()
+                employee = await BaseDbContext.Set<Employee>()
                                   .AsNoTracking()
                                   .Where(e => e.EmployeeName == employeeName)
                                   .FirstOrDefaultAsync(cancellationToken);
